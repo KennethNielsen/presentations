@@ -1,0 +1,714 @@
+\documentclass{beamer}
+
+%\usetheme{Warsaw}
+\usecolortheme{orchid}
+
+%\usepackage{listings}
+%\lstset{language=Python}
+
+\usepackage{color}
+\definecolor{darkred}{RGB}{180,0,0}
+
+\usepackage{minted}
+
+\title{Python decorators}
+\subtitle{Powerful and not all that magical after all}
+\author{Kenneth Nielsen\inst{1}}
+\institute
+{
+  \inst{1}%
+  Center for Individual Nanoparticle Functionality (CINF)\\
+  Institute of Physics\\
+  Technical University of Denmark (DTU)
+}
+\date{
+  Python and beers presentation,\\
+  March 20, 2015}
+\subject{Computer Science}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}
+  \frametitle{About me}
+  \begin{itemize}
+    \item Name is Kenneth Nielsen and I work at CINF
+    \item Free and open source software (FOSS) enthusiast
+    \item Long time FOSS translator
+    \item BIG TIME Pythonista
+    \item PyG3T https://launchpad.net/pyg3t. Tools for the translation
+      workflow.
+    \item PoProofRead https://launchpad.net/poproofread. Translation
+      proofreading tool
+    \item SoCo https://github.com/SoCo/SoCo. Driver for Sonos speakers.
+    \item PyExpLabSys https://github.com/CINF/PyExpLabSys.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{PyExpLabSys}
+  {\color{blue}Py}thon {\color{blue}Exp}erimental {\color{blue}Lab}
+  {\color{blue}Sys}tems (Best acronym ever!)
+  \begin{itemize}
+  \item Drivers for experimental equipment
+  \item File parsers for 3-rd party data files
+  \item Infrastructure for a network driven, decentralized, lab:
+    \begin{itemize}
+    \item Database logging
+    \item Wrappers around sockets and socket servers
+    \item Modules for live data transfer to webpages
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Decorators}
+\begin{minted}{python}
+@my_decorator
+def my_function():
+    pass
+\end{minted}
+
+\begin{exampleblock}{}
+  \begin{itemize}
+  \item Wraps (or decorates) Python functions
+  \item Can be used to add functionality to functions
+  \item Start-end, enter-exit, startup-teardown type code (or just one or the other)
+  \item Bah! Lets talk about sandwiches
+  \end{itemize}
+\end{exampleblock}
+\end{frame}
+
+
+% Sandwiches
+\begin{frame}[fragile]
+  \frametitle{Sandwich machine}
+\begin{minted}{python}
+def white_bread_blt():
+    print 'Apply bottom half of white bun'
+    print 'Apply Bacon'
+    print 'Apply Lettuce'
+    print 'Apply Tomatoes'
+    print 'Apply top half of white bun'
+
+def full_wheat_blt():
+    print 'Apply bottom half of full wheat bun'
+    print 'Apply Bacon'
+    print 'Apply Lettuce'
+    print 'Apply Tomatoes'
+    print 'Apply top half of full wheat bun'
+
+...
+\end{minted}
+\pause
+Kind of annoying, right? \pause Because it's dry!
+\end{frame}
+
+% DRY
+\begin{frame}
+  \Huge{}
+  {\color{blue}D}\uncover<2>{on't}\\
+  {\color{blue}R}\uncover<2>{epeat}\\
+  {\color{blue}Y}\uncover<2>{ourself}\\
+  \normalsize{}
+\end{frame}
+
+% Sandwiches again
+\begin{frame}[fragile]
+  \frametitle{Sandwich machine}
+\begin{minted}{python}
+def white_bread_blt():
+    print 'Apply bottom half of white bun'
+    print 'Apply Bacon'
+    print 'Apply Lettuce'
+    print 'Apply Tomatoes'
+    print 'Apply top half of white bun'
+
+def full_wheat_blt():
+    print 'Apply bottom half of full wheat bun'
+    print 'Apply Bacon'
+    print 'Apply Lettuce'
+    print 'Apply Tomatoes'
+    print 'Apply top half of full wheat bun'
+
+...
+\end{minted}
+\pause Aha! We can fix that with a sub function.
+\end{frame}
+
+% Sandwiches with sub function
+\begin{frame}[fragile]
+  \frametitle{Sandwich machine with sub function}
+\begin{minted}{python}
+def white_bread_blt():
+    print 'Apply bottom half of white bun'
+    blt()
+    print 'Apply top half of white bun'
+
+def full_wheat_blt():
+    print 'Apply bottom half of full wheat bun'
+    blt()
+    print 'Apply top half of full wheat bun'
+
+...
+
+def blt():
+    print 'Apply Bacon'
+    print 'Apply Lettuce'
+    print 'Apply Tomatoes'
+\end{minted}
+\pause
+But what if it was the other way around?
+\end{frame}
+
+% Different kinds of sandwiches
+\begin{frame}[fragile]
+  \frametitle{Sandwich machine with sub function}
+\begin{minted}{python}
+def full_wheat_blt():
+    print 'Apply bottom half of full wheat bun'
+    print 'Apply Bacon'
+    print 'Apply Lettuce'
+    print 'Apply Tomatoes'
+    print 'Apply top half of full wheat bun'
+
+def full_wheat_ham_and_cheese():
+    print 'Apply bottom half of full wheat bun'
+    print 'Apply Ham'
+    print 'Apply Cheese'
+    print 'Apply top half of full wheat bun'
+
+...
+\end{minted}
+\pause
+Could try with sub functions
+\end{frame}
+
+% Different kinds of sandwiches with sub functions
+\begin{frame}[fragile]
+  \frametitle{Sandwich machine with sub function}
+\begin{minted}{python}
+def full_wheat_blt():
+    full_wheat_bottom()
+    print 'Apply Bacon'
+    print 'Apply Lettuce'
+    print 'Apply Tomatoes'
+    full_wheat_top()
+
+def full_wheat_ham_and_cheese():
+    full_wheat_bottom()
+    print 'Apply Ham'
+    print 'Apply Cheese'
+    full_wheat_top()
+
+def full_wheat_bottom():
+    print 'Apply bottom half of full wheat bun'
+def full_wheat_top():
+    print 'Apply top half of full wheat bun'
+\end{minted}
+\pause
+Yuck!
+\end{frame}
+
+% The revelation
+\begin{frame}
+  \frametitle{Yay, decorators!}
+  \begin{itemize}
+  \item Turns out, this is one of the problems that can be solved more
+    elegantly with decorators
+  \item But before we dive in, lets talk a little about functions and objects
+  \end{itemize}
+\end{frame}
+
+% World of objects
+\begin{frame}[fragile]
+  \frametitle{Objects can be passed through functions and assigned other names}
+\begin{minted}{python}
+def pass_through(obj):
+    return obj
+
+my_list = ['Love Python and beers']
+my_int = 47
+my_other_int = my_int
+
+my_new_list = pass_through(my_list)
+my_new_int = pass_through(my_int)
+
+my_list is my_new_list
+my_int is my_new_int
+my_int is my_other_int
+# All returns True
+\end{minted}
+\end{frame}
+
+% Objects has methods and properties
+\begin{frame}[fragile]
+  \frametitle{Objects has methods and properties (even ints)}
+\begin{minted}{python}
+### Method on an int
+my_int.bit_length
+# <built-in method bit_length of int object at 0x155..>
+
+my_int.bit_length()
+# 6
+
+### Property on an int
+my_int.real
+# 47
+
+### Method on a list
+my_list.append
+# <built-in method append of list object at 0x7fe..>
+\end{minted}
+\end{frame}
+
+% Functions are objects too
+\begin{frame}[fragile]
+  \frametitle{Functions are objects too, part 1}
+\begin{minted}{python}
+pass_through
+# <function pass_through at 0x7f706ec4f758>
+
+### With methods
+pass_through.__format__
+# <built-in method __format__ of function object at 0x7f..>
+pass_through.__format__('')
+# '<function pass_through at 0x7f706ec4f758>'
+
+### And properties
+pass_through.__name__
+# 'pass_through'
+\end{minted}
+\end{frame}
+
+% Functions are objects too
+\begin{frame}[fragile]
+  \frametitle{Functions are objects too, part 2}
+\begin{minted}{python}
+### and they can be assigned a different name
+my_completely_unrelated_function = pass_through
+print my_completely_unrelated_function(9)
+# 9
+
+### so it does the same, and has the same attributes
+my_completely_unrelated_function.__name__
+# 'pass_through'
+
+### because it's the same object
+\end{minted}
+\end{frame}
+
+% Functions are objects too
+\begin{frame}[fragile]
+  \frametitle{AND functions can be passed through functions}
+\begin{minted}{python}
+def my_new_func():
+    print 'Python and beers'
+
+what_a_ride = pass_through(my_new_func)
+what_a_ride.__name__
+# 'my_new_func'
+
+what_a_ride()
+# Python and beers
+\end{minted}
+\begin{block}{\vspace*{-3ex}}
+  And now back to decorators!  
+\end{block}
+\end{frame}
+
+% Decorators are just syntactic sugar
+\begin{frame}[fragile]
+  \frametitle{Decorators are just syntactic sugar}
+\begin{minted}{python}
+@my_decorator
+def my_function():
+    pass
+\end{minted}
+\begin{alertblock}{\vspace*{-3ex}}
+  Is 100\% equivalent to
+\end{alertblock}
+\begin{minted}{python}
+def my_function():
+    pass
+my_function = my_decorator(my_function)
+\end{minted}
+\end{frame}
+
+% Down the rabbit hole
+\begin{frame}[fragile]
+  \frametitle{The essence of a decorator}
+\begin{minted}{python}
+@my_decorator
+def my_function():
+    pass
+\end{minted}
+\begin{block}{\vspace*{-3ex}}
+\begin{itemize}
+\item A decorator is the function (my\_decorator), the function it is applied to (my\_function), is passed through, right after it is defined
+\end{itemize}
+\end{block}
+\begin{minted}{python}
+def my_function():
+    pass
+my_function = my_decorator(my_function)
+\end{minted}
+\begin{block}{\vspace*{-3ex}}
+  Enough talk, lets see one already!
+\end{block}
+\end{frame}
+
+% My first decorator
+\begin{frame}[fragile]
+  \frametitle{A do nothing decorator (ex1.py)}
+\begin{minted}{python}
+def my_decorator(function):
+    return function
+
+@my_decorator
+def my_function():
+    print 'python and beers'
+
+my_function()
+# python and beers
+\end{minted}
+\end{frame}
+
+% My first decorator
+\begin{frame}[fragile]
+  \frametitle{A needy decorator (ex2.py)}
+\begin{minted}{python}
+def my_decorator(function):
+    print 'Look at me, look at me, I\'m a decorator'
+    return function
+
+@my_decorator
+def my_function():
+    print 'python and beers'
+
+my_function()
+# Look at me, look at me, I'm a decorator
+# python and beers
+\end{minted}
+\begin{block}{\vspace*{-3ex}}
+  And now, for some actually useful decorators
+\end{block}
+\end{frame}
+
+% A timer
+\begin{frame}[fragile]
+  \frametitle{A timer (ex3.py)}
+\begin{minted}{python}
+import time
+
+def time_me(function):
+    def inner_function(n):
+        t0 = time.time()
+        out = function(n)
+        print 'Duration', str(time.time() - t0), 's'
+        return out
+    return inner_function
+
+@time_me
+def square(n):
+    return n ** 2
+
+print square(10)
+# Duration 1.28746032715e-05 s
+# 100
+\end{minted}
+\end{frame}
+
+% Should be flexible
+\begin{frame}
+  \frametitle{Decorators should be flexible}
+  \begin{itemize}
+  \item In order for decorators to be really useful, they should be written to
+    be flexible
+  \item Take any combination of arguments
+  \item (Leave as little footprint on the function as possible) we won't go
+    that much into that
+  \end{itemize}
+\end{frame}
+
+% A flexible timer
+\begin{frame}[fragile]
+  \frametitle{A flexible timer (ex4.py)}
+\begin{minted}{python}
+import time
+
+def time_me(function):
+    def inner_function(*args, **kwargs):
+        t0 = time.time()
+        out = function(*args, **kwargs)
+        print 'Duration', str(time.time() - t0), 's'
+        return out
+    return inner_function
+
+@time_me
+def square(n, repeat=1):
+    for _ in range(repeat):
+        out = n ** 2
+    return out
+\end{minted}
+\end{frame}
+
+% A flexible timer
+\begin{frame}[fragile]
+  \frametitle{A flexible timer (ex4.py)}
+\begin{minted}{python}
+print square(10)
+print
+print square(10, 10**6)
+
+#Duration 1.4066696167e-05 s
+#100
+#
+#Duration 0.0811638832092 s
+#100
+\end{minted}
+\end{frame}
+
+% A flexible timer with cumulative sum
+\begin{frame}[fragile]
+  \frametitle{A flexible timer with cumulative sum (ex5.py), using attributes
+    on the function}
+\begin{minted}{python}
+import time
+
+def time_me_cumulative(function):
+    def inner_function(*args, **kwargs):
+        t0 = time.time()
+        out = function(*args, **kwargs)
+        delta = time.time() - t0
+        inner_function.cumsum += delta
+        print "This run:", delta, "in total:",\
+            inner_function.cumsum
+        return out
+    inner_function.cumsum = 0
+    return inner_function
+\end{minted}
+\end{frame}
+
+% A flexible timer with cumulative sum
+\begin{frame}[fragile]
+  \frametitle{A flexible timer with cumulative sum (ex5.py), application}
+\begin{minted}{python}
+@time_me_cumulative
+def square(n, repeat=1):
+    for _ in range(repeat):
+        out = n ** 2
+    return out
+
+square(10, 10**6)
+square(10, 10**6)
+#This run: 0.0809688568115 in total: 0.0809688568115
+#This run: 0.0796308517456 in total: 0.160599708557
+\end{minted}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Don't re-implement common tools}
+  \begin{itemize}
+  \item At this point we are well on out way to implementing a full profiler
+  \item If you are thinking, ``surely other will have needed this before me'',
+    you are most likely right. For advanced functionality \textbf{use existing and commony used implementations}
+  \item You are like you miss a few corner cases that will hurt you later
+  \end{itemize}
+  \begin{block}{}
+    Have a look at $\texttt{cProfile}$ in the standard library or
+    \texttt{line\_profiler} in pip
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Debugging by print statements}
+  \begin{itemize}
+  \item Often debugging is done by adding print statements at appropriate
+    points
+  \item Often on entry and exit from a function
+  \item It can be cumbersome to add and remove all of these
+  \item Sounds like a job for decorator
+  \end{itemize}
+\end{frame}
+
+% A call spec decorator
+\begin{frame}[fragile]
+  \frametitle{A call specification decorator (ex6.py), the decorator}
+\begin{minted}{python}
+def callstring(*args, **kwargs):
+    arglist = [str(arg) for arg in args]
+    arglist += [key + "=" + str(kwarg)
+                for key, kwarg in kwargs.items()]
+    return ', '.join(arglist)
+
+def spec_me(function):
+    def inner_function(*args, **kwargs):
+        argstring = callstring(*args, **kwargs)
+        print '+{}({})'.format(function.__name__,
+                               argstring)
+        out = function(*args, **kwargs)
+        print '>{}'.format(out)
+        return out
+    return inner_function
+\end{minted}
+\end{frame}
+
+% A call spec decorator
+\begin{frame}[fragile]
+  \frametitle{A call specification decorator (ex6.py), application}
+\begin{minted}{python}
+@spec_me
+def square(n, repeat=1):
+    for _ in range(repeat):
+        out = n ** 2
+    return out
+
+square(10)
+#+square(10)
+#>100
+
+square(10, repeat=2)
+#+square(10, repeat=2)
+#>100
+\end{minted}
+\end{frame}
+
+% A call spec decorator with levels
+\begin{frame}[fragile]
+  \frametitle{A call spec decorator with levels (ex7.py)\\(Trick with global variable, left as an exercise)}
+\begin{minted}{python}
+
+@spec_me
+def square(n):
+    return n ** 2
+
+@spec_me
+def speak_squares(n):
+    return '{} squared is {}'.format(n, square(n))
+
+speak_squares(10)
+
+#+speak_squares(10)
+#|+square(10)
+#|>100
+#>10 squared is 100
+\end{minted}
+\end{frame}
+
+\begin{frame}
+  \frametitle{A function with memory}
+  \begin{itemize}
+  \item Wait a minute!
+  \item The ability to look at input and output and to save values on the
+    functions
+  \item That sounds like the foundation for a function with memory
+  \end{itemize}
+\end{frame}
+
+% A call spec decorator with levels
+\begin{frame}[fragile]
+  \frametitle{A memory decorator (ex8.py)}
+\begin{minted}{python}
+def memory(function):
+    cache = {}
+    def inner_function(n):
+        if n not in cache:
+            cache[n] = function(n)
+        return cache[n]
+    return inner_function
+
+### Same result as
+
+def memory2(function):
+    def inner_function(n):
+        if n not in inner_function.cache:
+            inner_function.cache[n] = function(n)
+        return inner_function.cache[n]
+    inner_function.cache = {}
+    return inner_function
+\end{minted}
+\end{frame}
+
+% A call spec decorator with levels in action
+\begin{frame}[fragile]
+  \frametitle{A memory decorator (ex8.py) in action}
+\begin{minted}{python}
+from ex3 import time_me
+
+@time_me
+@memory
+def expensive(n):
+    for n in range(10**7):
+        out = n ** 2
+    return out
+
+out1 = expensive(8)
+out2 = expensive(8)
+print out1 == out2
+
+# Duration 0.715964078903 s
+# Duration 9.53674316406e-07 s
+# True
+\end{minted}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Neat, but its not that simple}
+  \begin{itemize}
+  \item While this works nicely for certain kinds of functions, that are a lot
+    of corner cases and gochas
+  \item What if the input was a list, you can't use a mutable object as a
+    dictionary key in $\texttt{cache}$. (Make a copy as a immutable type)
+  \item What if the input was a big numpy array, do we really want to keep a
+    copy of that in memory? (hashing)
+  \item What if you wanted your function to remember across script runs? How
+    do you save input and output?
+  \end{itemize}
+\end{frame}
+\begin{block}
+  These are all good questions. But remember.
+\end{block}
+
+\begin{frame}
+  \frametitle{Don't re-implement common tools}
+  \begin{itemize}
+  \item If you are thinking, ``surely others will have needed this before me'',
+    you are most likely right. For advanced functionality \textbf{use existing and commony used implementations}
+  \item You are likely you miss a few corner cases that will hurt you later
+  \end{itemize}
+  \begin{block}{}
+    Have a look at $\texttt{joblib}$, which is in pip.
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{And then the mandatory Spiderman quote}
+  \begin{block}{}
+    With great power comes great responsibility.
+  \end{block}
+  \begin{itemize}
+  \item Don't hide \textbf{large} amounts of code away, that is central to the
+    function of your code. It will make it more difficult to read.
+  \item Caching is a great way to end up with some head-scratching bugs. Make
+    sure to understand the limitations of a tool like $\texttt{joblib}$.
+  \item \textbf{But}, if in doubt, just remove the decorator. It is just 1
+    line, that toggles the added functionality off or on. Thats one of the
+    beauties of decorators
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{And then the stuff we did not talk about}
+  \begin{block}{}
+    A decorator returns another functions, which means that function
+    'metadata' like its __name__, its docstring and its call specification is
+    lost!
+  \end{block}
+  There are (ready to use) ways around this (stdlib $\texttt{wraps}$, pip
+  $\texttt{wrapt}$), of which at least the former is a part on any good online
+  tutorial.
+\end{frame}
+
+\end{document}
