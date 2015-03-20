@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 def memory(function):
     cache = {}
     def inner_function(n):
@@ -27,6 +29,6 @@ def expensive(n):
 
 out1 = expensive(8)
 out2 = expensive(8)
-print out1 == out2
+print(out1 == out2)
 
         

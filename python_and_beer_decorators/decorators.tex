@@ -33,34 +33,53 @@
 \begin{frame}
   \frametitle{About me}
   \begin{itemize}
-    \item Name is Kenneth Nielsen and I work at CINF
+    \item My name is Kenneth Nielsen and I work at CINF
     \item Free and open source software (FOSS) enthusiast
-    \item Long time FOSS translator
+    \item Long time FOSS translator (and developer)
     \item BIG TIME Pythonista
-    \item PyG3T https://launchpad.net/pyg3t. Tools for the translation
-      workflow.
-    \item PoProofRead https://launchpad.net/poproofread. Translation
-      proofreading tool
-    \item SoCo https://github.com/SoCo/SoCo. Driver for Sonos speakers.
-    \item PyExpLabSys https://github.com/CINF/PyExpLabSys.
   \end{itemize}
+  \begin{block}{Slides and files for examples}
+    \center
+    \footnotesize
+    \texttt{git clone https://github.com/KennethNielsen/presentations.git}\newline
+    \newline
+    \texttt{https://github.com/KennethNielsen/presentations}
+    \texttt{http://bit.ly/1FclzDR}
+  \end{block}
 \end{frame}
 
-\begin{frame}
-  \frametitle{PyExpLabSys}
-  {\color{blue}Py}thon {\color{blue}Exp}erimental {\color{blue}Lab}
-  {\color{blue}Sys}tems (Best acronym ever!)
-  \begin{itemize}
-  \item Drivers for experimental equipment
-  \item File parsers for 3-rd party data files
-  \item Infrastructure for a network driven, decentralized, lab:
-    \begin{itemize}
-    \item Database logging
-    \item Wrappers around sockets and socket servers
-    \item Modules for live data transfer to webpages
-    \end{itemize}
-  \end{itemize}
-\end{frame}
+
+% \begin{frame}
+%   \frametitle{About me}
+%   \begin{itemize}
+%     \item Name is Kenneth Nielsen and I work at CINF
+%     \item Free and open source software (FOSS) enthusiast
+%     \item Long time FOSS translator
+%     \item BIG TIME Pythonista
+%     \item PyG3T https://launchpad.net/pyg3t. Tools for the translation
+%       workflow.
+%     \item PoProofRead https://launchpad.net/poproofread. Translation
+%       proofreading tool
+%     \item SoCo https://github.com/SoCo/SoCo. Driver for Sonos speakers.
+%     \item PyExpLabSys https://github.com/CINF/PyExpLabSys.
+%   \end{itemize}
+% \end{frame}
+
+% \begin{frame}
+%   \frametitle{PyExpLabSys}
+%   {\color{blue}Py}thon {\color{blue}Exp}erimental {\color{blue}Lab}
+%   {\color{blue}Sys}tems (Best acronym ever!)
+%   \begin{itemize}
+%   \item Drivers for experimental equipment
+%   \item File parsers for 3-rd party data files
+%   \item Infrastructure for a network driven, decentralized, lab:
+%     \begin{itemize}
+%     \item Database logging
+%     \item Wrappers around sockets and socket servers
+%     \item Modules for live data transfer to webpages
+%     \end{itemize}
+%   \end{itemize}
+% \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Decorators}
@@ -86,18 +105,18 @@ def my_function():
   \frametitle{Sandwich machine}
 \begin{minted}{python}
 def white_bread_blt():
-    print 'Apply bottom half of white bun'
-    print 'Apply Bacon'
-    print 'Apply Lettuce'
-    print 'Apply Tomatoes'
-    print 'Apply top half of white bun'
+    print('Apply bottom half of white bun')
+    print('Apply Bacon')
+    print('Apply Lettuce')
+    print('Apply Tomatoes')
+    print('Apply top half of white bun')
 
 def full_wheat_blt():
-    print 'Apply bottom half of full wheat bun'
-    print 'Apply Bacon'
-    print 'Apply Lettuce'
-    print 'Apply Tomatoes'
-    print 'Apply top half of full wheat bun'
+    print('Apply bottom half of full wheat bun')
+    print('Apply Bacon')
+    print('Apply Lettuce')
+    print('Apply Tomatoes')
+    print('Apply top half of full wheat bun')
 
 ...
 \end{minted}
@@ -119,18 +138,18 @@ Kind of annoying, right? \pause Because it's dry!
   \frametitle{Sandwich machine}
 \begin{minted}{python}
 def white_bread_blt():
-    print 'Apply bottom half of white bun'
-    print 'Apply Bacon'
-    print 'Apply Lettuce'
-    print 'Apply Tomatoes'
-    print 'Apply top half of white bun'
+    print('Apply bottom half of white bun')
+    print('Apply Bacon')
+    print('Apply Lettuce')
+    print('Apply Tomatoes')
+    print('Apply top half of white bun')
 
 def full_wheat_blt():
-    print 'Apply bottom half of full wheat bun'
-    print 'Apply Bacon'
-    print 'Apply Lettuce'
-    print 'Apply Tomatoes'
-    print 'Apply top half of full wheat bun'
+    print('Apply bottom half of full wheat bun')
+    print('Apply Bacon')
+    print('Apply Lettuce')
+    print('Apply Tomatoes')
+    print('Apply top half of full wheat bun')
 
 ...
 \end{minted}
@@ -142,21 +161,21 @@ def full_wheat_blt():
   \frametitle{Sandwich machine with sub function}
 \begin{minted}{python}
 def white_bread_blt():
-    print 'Apply bottom half of white bun'
+    print('Apply bottom half of white bun')
     blt()
-    print 'Apply top half of white bun'
+    print('Apply top half of white bun')
 
 def full_wheat_blt():
-    print 'Apply bottom half of full wheat bun'
+    print('Apply bottom half of full wheat bun')
     blt()
-    print 'Apply top half of full wheat bun'
+    print('Apply top half of full wheat bun')
 
 ...
 
 def blt():
-    print 'Apply Bacon'
-    print 'Apply Lettuce'
-    print 'Apply Tomatoes'
+    print('Apply Bacon')
+    print('Apply Lettuce')
+    print('Apply Tomatoes')
 \end{minted}
 \pause
 But what if it was the other way around?
@@ -167,17 +186,17 @@ But what if it was the other way around?
   \frametitle{Sandwich machine with sub function}
 \begin{minted}{python}
 def full_wheat_blt():
-    print 'Apply bottom half of full wheat bun'
-    print 'Apply Bacon'
-    print 'Apply Lettuce'
-    print 'Apply Tomatoes'
-    print 'Apply top half of full wheat bun'
+    print('Apply bottom half of full wheat bun')
+    print('Apply Bacon')
+    print('Apply Lettuce')
+    print('Apply Tomatoes')
+    print('Apply top half of full wheat bun')
 
 def full_wheat_ham_and_cheese():
-    print 'Apply bottom half of full wheat bun'
-    print 'Apply Ham'
-    print 'Apply Cheese'
-    print 'Apply top half of full wheat bun'
+    print('Apply bottom half of full wheat bun')
+    print('Apply Ham')
+    print('Apply Cheese')
+    print('Apply top half of full wheat bun')
 
 ...
 \end{minted}
@@ -191,21 +210,21 @@ Could try with sub functions
 \begin{minted}{python}
 def full_wheat_blt():
     full_wheat_bottom()
-    print 'Apply Bacon'
-    print 'Apply Lettuce'
-    print 'Apply Tomatoes'
+    print('Apply Bacon')
+    print('Apply Lettuce')
+    print('Apply Tomatoes')
     full_wheat_top()
 
 def full_wheat_ham_and_cheese():
     full_wheat_bottom()
-    print 'Apply Ham'
-    print 'Apply Cheese'
+    print('Apply Ham')
+    print('Apply Cheese')
     full_wheat_top()
 
 def full_wheat_bottom():
-    print 'Apply bottom half of full wheat bun'
+    print('Apply bottom half of full wheat bun')
 def full_wheat_top():
-    print 'Apply top half of full wheat bun'
+    print('Apply top half of full wheat bun')
 \end{minted}
 \pause
 Yuck!
@@ -288,7 +307,7 @@ pass_through.__name__
 \begin{minted}{python}
 ### and they can be assigned a different name
 my_completely_unrelated_function = pass_through
-print my_completely_unrelated_function(9)
+print(my_completely_unrelated_function(9))
 # 9
 
 ### so it does the same, and has the same attributes
@@ -301,10 +320,23 @@ my_completely_unrelated_function.__name__
 
 % Functions are objects too
 \begin{frame}[fragile]
+  \frametitle{Functions are objects too, part 3}
+\begin{minted}{python}
+### Finally, because functions are objects, just like
+### with any other mutable object, we can also create
+### new attributes on them
+pass_through.my_new_var = 47
+print(pass_through.my_new_var)
+# 47
+\end{minted}
+\end{frame}
+
+% Functions are objects too
+\begin{frame}[fragile]
   \frametitle{AND functions can be passed through functions}
 \begin{minted}{python}
 def my_new_func():
-    print 'Python and beers'
+    print('Python and beers')
 
 what_a_ride = pass_through(my_new_func)
 what_a_ride.__name__
@@ -361,14 +393,14 @@ my_function = my_decorator(my_function)
 
 % My first decorator
 \begin{frame}[fragile]
-  \frametitle{A do nothing decorator (ex1.py)}
+  \frametitle{A do absolutely nothing decorator (ex1.py)}
 \begin{minted}{python}
 def my_decorator(function):
     return function
 
 @my_decorator
 def my_function():
-    print 'python and beers'
+    print('python and beers')
 
 my_function()
 # python and beers
@@ -380,12 +412,14 @@ my_function()
   \frametitle{A needy decorator (ex2.py)}
 \begin{minted}{python}
 def my_decorator(function):
-    print 'Look at me, look at me, I\'m a decorator'
-    return function
+    def inner_function():
+        print('Look at me, look at me, I\'m a decorator')
+        function()
+    return inner_function
 
 @my_decorator
 def my_function():
-    print 'python and beers'
+    print('python and beers')
 
 my_function()
 # Look at me, look at me, I'm a decorator
@@ -403,10 +437,10 @@ my_function()
 import time
 
 def time_me(function):
-    def inner_function(n):
+    def inner_function(arg0):
         t0 = time.time()
-        out = function(n)
-        print 'Duration', str(time.time() - t0), 's'
+        out = function(arg0)
+        print('Duration', time.time() - t0, 's')
         return out
     return inner_function
 
@@ -414,7 +448,7 @@ def time_me(function):
 def square(n):
     return n ** 2
 
-print square(10)
+print(square(10))
 # Duration 1.28746032715e-05 s
 # 100
 \end{minted}
@@ -427,8 +461,8 @@ print square(10)
   \item In order for decorators to be really useful, they should be written to
     be flexible
   \item Take any combination of arguments
-  \item (Leave as little footprint on the function as possible) we won't go
-    that much into that
+  \item Leave as little footprint on the function as possible (we won't go
+    that much into that)
   \end{itemize}
 \end{frame}
 
@@ -442,7 +476,7 @@ def time_me(function):
     def inner_function(*args, **kwargs):
         t0 = time.time()
         out = function(*args, **kwargs)
-        print 'Duration', str(time.time() - t0), 's'
+        print('Duration', str(time.time() - t0), 's')
         return out
     return inner_function
 
@@ -458,15 +492,15 @@ def square(n, repeat=1):
 \begin{frame}[fragile]
   \frametitle{A flexible timer (ex4.py)}
 \begin{minted}{python}
-print square(10)
-print
-print square(10, 10**6)
+print(square(10))
+print()
+print(square(10, 10**6))
 
-#Duration 1.4066696167e-05 s
-#100
+# Duration 1.4066696167e-05 s
+# 100
 #
-#Duration 0.0811638832092 s
-#100
+# Duration 0.0811638832092 s
+# 100
 \end{minted}
 \end{frame}
 
@@ -475,16 +509,14 @@ print square(10, 10**6)
   \frametitle{A flexible timer with cumulative sum (ex5.py), using attributes
     on the function}
 \begin{minted}{python}
-import time
-
 def time_me_cumulative(function):
     def inner_function(*args, **kwargs):
         t0 = time.time()
         out = function(*args, **kwargs)
         delta = time.time() - t0
         inner_function.cumsum += delta
-        print "This run:", delta, "in total:",\
-            inner_function.cumsum
+        print("This run:", delta, "in total:",
+              inner_function.cumsum)
         return out
     inner_function.cumsum = 0
     return inner_function
@@ -512,11 +544,15 @@ square(10, 10**6)
   \frametitle{Don't re-implement common tools}
   \begin{itemize}
   \item At this point we are well on out way to implementing a full profiler
-  \item If you are thinking, ``surely other will have needed this before me'',
-    you are most likely right. For advanced functionality \textbf{use existing and commony used implementations}
-  \item You are like you miss a few corner cases that will hurt you later
+  \item If at any point you are thinking \textbf{``surely a lot of
+      other people will have needed this before me, I wonder if there
+      isn't a tool for it?''} you are most likely right!
+  \item {\color{darkred}For advanced functionality use existing and
+      commonly used implementations}
+  \item {\color{black}}You are very likely to miss a few corner cases,
+    that will seriously hurt you later
   \end{itemize}
-  \begin{block}{}
+  \begin{block}{\vspace*{-3ex}}
     Have a look at $\texttt{cProfile}$ in the standard library or
     \texttt{line\_profiler} in pip
   \end{block}
@@ -537,19 +573,20 @@ square(10, 10**6)
 \begin{frame}[fragile]
   \frametitle{A call specification decorator (ex6.py), the decorator}
 \begin{minted}{python}
-def callstring(*args, **kwargs):
+def get_argstring(*args, **kwargs):
+    """Returns str: arg0, arg1, kw0=kwarg0, kw1=kwarg1"""
     arglist = [str(arg) for arg in args]
-    arglist += [key + "=" + str(kwarg)
+    arglist += ['{}={}'.format(key, kwarg)
                 for key, kwarg in kwargs.items()]
     return ', '.join(arglist)
 
 def spec_me(function):
     def inner_function(*args, **kwargs):
-        argstring = callstring(*args, **kwargs)
-        print '+{}({})'.format(function.__name__,
-                               argstring)
+        argstring = get_argstring(*args, **kwargs)
+        print('+{}({})'.format(function.__name__,
+                               argstring))
         out = function(*args, **kwargs)
-        print '>{}'.format(out)
+        print('>{}'.format(out))
         return out
     return inner_function
 \end{minted}
@@ -577,9 +614,11 @@ square(10, repeat=2)
 
 % A call spec decorator with levels
 \begin{frame}[fragile]
-  \frametitle{A call spec decorator with levels (ex7.py)\\(Trick with global variable, left as an exercise)}
+  \frametitle{A call spec decorator with levels (ex7.py)}
+  \begin{exampleblock}{\vspace*{-3ex}}
+    Trick with global variable, left as an exercise
+  \end{exampleblock}
 \begin{minted}{python}
-
 @spec_me
 def square(n):
     return n ** 2
@@ -646,7 +685,7 @@ def expensive(n):
 
 out1 = expensive(8)
 out2 = expensive(8)
-print out1 == out2
+print(out1 == out2)
 
 # Duration 0.715964078903 s
 # Duration 9.53674316406e-07 s
@@ -658,7 +697,7 @@ print out1 == out2
   \frametitle{Neat, but its not that simple}
   \begin{itemize}
   \item While this works nicely for certain kinds of functions, that are a lot
-    of corner cases and gochas
+    of corner cases and gotchas
   \item What if the input was a list, you can't use a mutable object as a
     dictionary key in $\texttt{cache}$. (Make a copy as a immutable type)
   \item What if the input was a big numpy array, do we really want to keep a
@@ -666,49 +705,98 @@ print out1 == out2
   \item What if you wanted your function to remember across script runs? How
     do you save input and output?
   \end{itemize}
-\end{frame}
-\begin{block}
+\begin{alertblock}{\vspace*{-3ex}}
   These are all good questions. But remember.
-\end{block}
+\end{alertblock}
+\end{frame}
 
 \begin{frame}
   \frametitle{Don't re-implement common tools}
   \begin{itemize}
-  \item If you are thinking, ``surely others will have needed this before me'',
-    you are most likely right. For advanced functionality \textbf{use existing and commony used implementations}
-  \item You are likely you miss a few corner cases that will hurt you later
+  \item If at any point you are thinking \textbf{``surely a lot of
+      other people will have needed this before me, I wonder if there
+      isn't a tool for it?''} you are most likely right!
+  \item {\color{darkred}For advanced functionality use existing and
+      commonly used implementations}
+  \item {\color{black}}You are very likely to miss a few corner cases,
+    that will seriously hurt you later
   \end{itemize}
-  \begin{block}{}
+  \begin{block}{\vspace*{-3ex}}
     Have a look at $\texttt{joblib}$, which is in pip.
   \end{block}
 \end{frame}
 
 \begin{frame}
   \frametitle{And then the mandatory Spiderman quote}
-  \begin{block}{}
+  \begin{alertblock}{\vspace*{-3ex}}
     With great power comes great responsibility.
-  \end{block}
+  \end{alertblock}
   \begin{itemize}
-  \item Don't hide \textbf{large} amounts of code away, that is central to the
+  \item \textbf{Don't hide large amounts of code away}, that is central to the
     function of your code. It will make it more difficult to read.
+  \item \textbf{Naming is very important for decorators}
   \item Caching is a great way to end up with some head-scratching bugs. Make
     sure to understand the limitations of a tool like $\texttt{joblib}$.
-  \item \textbf{But}, if in doubt, just remove the decorator. It is just 1
-    line, that toggles the added functionality off or on. Thats one of the
-    beauties of decorators
+  \item \textbf{But, if in doubt, just remove the decorator}. It is just 1
+    line that toggles the added functionality off or on. That is one of the
+    beauties of decorators.
   \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{And then the stuff we did not talk about}
-  \begin{block}{}
-    A decorator returns another functions, which means that function
-    'metadata' like its __name__, its docstring and its call specification is
-    lost!
-  \end{block}
-  There are (ready to use) ways around this (stdlib $\texttt{wraps}$, pip
-  $\texttt{wrapt}$), of which at least the former is a part on any good online
+  \begin{alertblock}{\vspace*{-3ex}}
+    A decorator usually returns another function, which means that
+    function ``metadata'', like its \texttt{\_\_name\_\_}, its
+    docstring and its call specification is lost! \footnotesize(Plus
+    your stack-trace takes a detour)
+  \end{alertblock}
+  There are (ready to use) ways around this (stdlib \texttt{wraps}, pip
+  \texttt{wrapt}), of which at least the former is part on any good on-line
   tutorial.
+  \begin{block}{\vspace*{-3ex}}
+    Decorators can also take arguments!
+  \end{block}
+  This was a little too much to cram into one Friday afternoon presentation, but it will be part of most online tutorials.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Credits}
+  \begin{itemize}
+  \item Colton Myers: Decorators: A Powerful Weapon in your Python
+    Arsenal - PyCon 2014 https://www.youtube.com/watch?v=9oyr0mocZTg
+  \item Graham Dumpleton: Advanced methods for creating decorators -
+    PyCon 2014 https://www.youtube.com/watch?v=7jGtDGxgwEY
+    ({\color{darkred}ALL the gory details of how to make decorators
+      100\% transparent})
+  \item {\color{black}}I have shamelessly stolen the sandwich example
+    from a Youtube video I once watched, which I have been
+    unable to find again. Credits to you, unnamed presenter.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{That's it, any questions?}
+  \small
+\begin{minted}{python}
+def full_wheat(filling):
+    def full_wheat_sandwich():
+        print('Apply bottom half of full wheat bun')
+        filling()
+        print('Apply top half of full wheat bun')
+    return full_wheat_sandwich
+
+@full_wheat
+def full_wheat_blt():
+    print('Apply Bacon')
+    print('Apply Lettuce')
+    print('Apply Tomatoes')
+
+@full_wheat
+def full_wheat_ham_and_cheese():
+    print('Apply Ham')
+    print('Apply Cheese')
+\end{minted}
 \end{frame}
 
 \end{document}

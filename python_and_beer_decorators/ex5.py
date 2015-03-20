@@ -1,3 +1,4 @@
+from __future__ import print_function
 import time
 
 def time_me_cumulative(function):
@@ -6,8 +7,8 @@ def time_me_cumulative(function):
         out = function(*args, **kwargs)
         delta = time.time() - t0
         inner_function.cumsum += delta
-        print "This run:", delta, "in total:",\
-            inner_function.cumsum
+        print("This run:", delta, "in total:",
+              inner_function.cumsum)
         return out
     inner_function.cumsum = 0
     return inner_function

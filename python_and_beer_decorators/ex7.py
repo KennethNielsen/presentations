@@ -1,8 +1,9 @@
-# -*- coding: utf-8 -*-
+from __future__ import print_function
+
 def callstring(*args, **kwargs):
     arglist = [repr(arg) for arg in args]
     arglist += [key + "=" + str(kwarg)
-                for key, kwarg in kwargs.items()]
+                for key, kwarg in list(kwargs.items())]
     return ', '.join(arglist)
 
 LEVEL = -1
@@ -12,11 +13,11 @@ def spec_me(function):
         global LEVEL
         LEVEL += 1
         argstring = callstring(*args, **kwargs)
-        print '{}+{}({})'.format('|' * LEVEL,
+        print('{}+{}({})'.format('|' * LEVEL,
                                  function.__name__,
-                                 argstring)
+                                 argstring))
         out = function(*args, **kwargs)
-        print '{}>{}'.format('|' * LEVEL, out)
+        print('{}>{}'.format('|' * LEVEL, out))
         LEVEL -= 1
         return out
     return inner_function
