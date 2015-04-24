@@ -1,0 +1,162 @@
+\documentclass{beamer}
+
+%\usetheme{Warsaw}
+\usecolortheme{orchid}
+
+%\usepackage{listings}
+%\lstset{language=Python}
+
+\usepackage{color}
+\definecolor{darkred}{RGB}{180,0,0}
+
+\usepackage{minted}
+
+\title{Lesser known gems of the standard library}
+\subtitle{The ?? and ??s of ``batteries included''}
+\author{Kenneth Nielsen\inst{1}}
+\institute
+{
+  \inst{1}%
+  Center for Individual Nanoparticle Functionality (CINF)\\
+  Institute of Physics\\
+  Technical University of Denmark (DTU)
+}
+\date{
+  Python and beers presentation,\\
+  Aprils 29, 2015}
+\subject{Computer Science}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}
+  \frametitle{About me}
+  \begin{itemize}
+    \item My name is Kenneth Nielsen and I work at CINF
+    \item Free and open source software (FOSS) enthusiast
+    \item Use way too much time on python conference presentations on
+      youtube
+  \end{itemize}
+  \begin{block}{Slides and examples}
+    \center
+    \footnotesize
+    \texttt{git clone https://github.com/KennethNielsen/presentations.git}\newline
+    \newline
+    \texttt{https://github.com/KennethNielsen/presentations}
+    \texttt{http://bit.ly/1FclzDR}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{About me}
+  \begin{itemize}
+    \item Name is Kenneth Nielsen and I work at CINF
+    \item Free and open source software (FOSS) enthusiast
+    \item Long time FOSS translator
+    \item BIG TIME Pythonista
+    \item PyG3T https://launchpad.net/pyg3t. Tools for the translation
+      workflow.
+    \item PoProofRead https://launchpad.net/poproofread. Translation
+      proofreading tool
+    \item SoCo https://github.com/SoCo/SoCo. Driver for Sonos speakers.
+    \item PyExpLabSys https://github.com/CINF/PyExpLabSys.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{PyExpLabSys}
+  {\color{blue}Py}thon {\color{blue}Exp}erimental {\color{blue}Lab}
+  {\color{blue}Sys}tems (Best acronym ever!)
+  \begin{itemize}
+  \item Drivers for experimental equipment
+  \item File parsers for 3-rd party data files
+  \item Infrastructure for a network driven, decentralized, lab:
+    \begin{itemize}
+    \item Database logging
+    \item Wrappers around sockets and socket servers
+    \item Modules for live data transfer to webpages
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Outline}
+
+  A peak into some of the lesser known (at least in the circle of
+  scientists) gems of the standard library
+  \begin{itemize}
+  \item Convenient containers (... and more)
+    \begin{itemize}
+    \item defaultdict, Counter
+    \end{itemize}
+  \item Special operators for key functions (get rid of lambdas)
+    \begin{itemize}
+    \item itemgetter, attrgetter
+    \end{itemize}
+  \item Function tools
+    \begin{itemize}
+    \item partial
+    \end{itemize}
+  \item Part way between anonymous data and full classes
+    \begin{itemize}
+    \item namedtuple
+    \end{itemize}
+  \item Random stuff ;)
+    \begin{itemize}
+    \item choice
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+%%% Default dict
+\begin{frame}[fragile]
+  \frametitle{Defaultdict}
+  \begin{minted}{python}
+    from collections import defaultdict
+    groups = defaultdict(default_callable)
+  \end{minted}
+  \begin{block}{\vspace*{-3ex}}
+    A dictionary that will fill in values for unknown keys with
+    defaults supplied by a callable
+  \end{block}
+  \begin{itemize}
+  \item Useful e.g.\ for grouping, where you would otherwise have to
+    write annoying first-item-init code
+  \item Supply a callable when creating it, that will be called to ask
+    for a default value
+  \end{itemize}
+  \begin{center}
+    \texttt{LIVE! Example ex1\_default\_dict.py}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Counter}
+  \begin{minted}{python}
+    from collections import Counter
+    counter = Counter()
+  \end{minted}
+  \begin{block}{\vspace*{-3ex}}
+    A default dict with default value 0 (and some special counter
+    relevant math)
+  \end{block}
+  \begin{itemize}
+  \item Useful for counting!
+  \item Can be added and subtracted
+  \item Flattens out at 0 when subtracted
+  \end{itemize}
+  \begin{center}
+    \texttt{LIVE! Example ex2\_counter.py}
+  \end{center}
+\end{frame}
+
+% \begin{frame}[fragile]
+%   \frametitle{Decorators}
+% \begin{minted}{python}
+% @my_decorator
+% def my_function():
+%     pass
+% \end{minted}
+
+\end{document}
