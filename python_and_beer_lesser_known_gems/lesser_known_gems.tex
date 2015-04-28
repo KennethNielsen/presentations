@@ -83,8 +83,7 @@
 \begin{frame}
   \frametitle{Outline}
 
-  A peak into some of the lesser known (at least in the circle of
-  scientists) gems of the standard library
+  A peak into some of the (maybe) lesser known gems of the standard library
   \begin{itemize}
   \item Convenient containers (... and more)
     \begin{itemize}
@@ -109,7 +108,6 @@
   \end{itemize}
 \end{frame}
 
-%%% Default dict
 \begin{frame}[fragile]
   \frametitle{Defaultdict}
   \begin{minted}{python}
@@ -167,7 +165,46 @@
     those pesky unreadable lambda expressions
   \end{itemize}
   \begin{center}
-    \texttt{LIVE! Example ex3\_itemgetter.py}
+    \texttt{LIVE! Example ex3\_itemgetter\_attrgetter.py}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{partial}
+  \begin{minted}{python}
+    from functools import partial
+  \end{minted}
+  \begin{block}{\vspace*{-3ex}}
+    From original functions create new ones, where certain values in
+    the original functions calls are already filled out
+  \end{block}
+  \begin{itemize}
+  \item To call the same function a lot of times with one spcific
+    argument
+  \item To create custom functions that calls others with an argument
+    filled out
+  \end{itemize}
+  \begin{center}
+    \texttt{LIVE! Example ex3\_itemgetter\_attrgetter.py}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{namedtuple}
+  \begin{minted}{python}
+    from collections import partial
+  \end{minted}
+  \begin{block}{\vspace*{-3ex}}
+    Named tuples can be used to give your tuple like data structures a
+    name and make it possible to access its values by names instead of
+    index WITHOUT writing a class by hand for it
+  \end{block}
+  \begin{itemize}
+  \item Usefull for naming data structures
+  \item Usefull for getting . access instead of []
+  \end{itemize}
+  \begin{center}
+    \texttt{LIVE! Example ex6\_namedtuple.py}
   \end{center}
 \end{frame}
 
