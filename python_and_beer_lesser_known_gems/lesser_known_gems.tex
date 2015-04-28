@@ -48,37 +48,37 @@
   \end{block}
 \end{frame}
 
-\begin{frame}
-  \frametitle{About me}
-  \begin{itemize}
-    \item Name is Kenneth Nielsen and I work at CINF
-    \item Free and open source software (FOSS) enthusiast
-    \item Long time FOSS translator
-    \item BIG TIME Pythonista
-    \item PyG3T https://launchpad.net/pyg3t. Tools for the translation
-      workflow.
-    \item PoProofRead https://launchpad.net/poproofread. Translation
-      proofreading tool
-    \item SoCo https://github.com/SoCo/SoCo. Driver for Sonos speakers.
-    \item PyExpLabSys https://github.com/CINF/PyExpLabSys.
-  \end{itemize}
-\end{frame}
+% \begin{frame}
+%   \frametitle{About me}
+%   \begin{itemize}
+%     \item Name is Kenneth Nielsen and I work at CINF
+%     \item Free and open source software (FOSS) enthusiast
+%     \item Long time FOSS translator
+%     \item BIG TIME Pythonista
+%     \item PyG3T https://launchpad.net/pyg3t. Tools for the translation
+%       workflow.
+%     \item PoProofRead https://launchpad.net/poproofread. Translation
+%       proofreading tool
+%     \item SoCo https://github.com/SoCo/SoCo. Driver for Sonos speakers.
+%     \item PyExpLabSys https://github.com/CINF/PyExpLabSys.
+%   \end{itemize}
+% \end{frame}
 
-\begin{frame}
-  \frametitle{PyExpLabSys}
-  {\color{blue}Py}thon {\color{blue}Exp}erimental {\color{blue}Lab}
-  {\color{blue}Sys}tems (Best acronym ever!)
-  \begin{itemize}
-  \item Drivers for experimental equipment
-  \item File parsers for 3-rd party data files
-  \item Infrastructure for a network driven, decentralized, lab:
-    \begin{itemize}
-    \item Database logging
-    \item Wrappers around sockets and socket servers
-    \item Modules for live data transfer to webpages
-    \end{itemize}
-  \end{itemize}
-\end{frame}
+% \begin{frame}
+%   \frametitle{PyExpLabSys}
+%   {\color{blue}Py}thon {\color{blue}Exp}erimental {\color{blue}Lab}
+%   {\color{blue}Sys}tems (Best acronym ever!)
+%   \begin{itemize}
+%   \item Drivers for experimental equipment
+%   \item File parsers for 3-rd party data files
+%   \item Infrastructure for a network driven, decentralized, lab:
+%     \begin{itemize}
+%     \item Database logging
+%     \item Wrappers around sockets and socket servers
+%     \item Modules for live data transfer to webpages
+%     \end{itemize}
+%   \end{itemize}
+% \end{frame}
 
 \begin{frame}
   \frametitle{Outline}
@@ -148,6 +148,26 @@
   \end{itemize}
   \begin{center}
     \texttt{LIVE! Example ex2\_counter.py}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{itemgetter and attrgetter}
+  \begin{minted}{python}
+    from operator import itemgetter, attrgetter
+  \end{minted}
+  \begin{block}{\vspace*{-3ex}}
+    Gives you a function that returns a numbered element from an
+    iterable or a specific attribute from an object
+  \end{block}
+  \begin{itemize}
+  \item {\color{darkred}EXTREMELY} usefull as \texttt{key} functions for
+    \texttt{sort}, \texttt{sorted}, \texttt{min} and \texttt{max} ...
+  \item ... especially because they make it possible to get rid of
+    those pesky unreadable lambda expressions
+  \end{itemize}
+  \begin{center}
+    \texttt{LIVE! Example ex3\_itemgetter.py}
   \end{center}
 \end{frame}
 
