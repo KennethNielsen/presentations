@@ -48,38 +48,6 @@
   \end{block}
 \end{frame}
 
-% \begin{frame}
-%   \frametitle{About me}
-%   \begin{itemize}
-%     \item Name is Kenneth Nielsen and I work at CINF
-%     \item Free and open source software (FOSS) enthusiast
-%     \item Long time FOSS translator
-%     \item BIG TIME Pythonista
-%     \item PyG3T https://launchpad.net/pyg3t. Tools for the translation
-%       workflow.
-%     \item PoProofRead https://launchpad.net/poproofread. Translation
-%       proofreading tool
-%     \item SoCo https://github.com/SoCo/SoCo. Driver for Sonos speakers.
-%     \item PyExpLabSys https://github.com/CINF/PyExpLabSys.
-%   \end{itemize}
-% \end{frame}
-
-% \begin{frame}
-%   \frametitle{PyExpLabSys}
-%   {\color{blue}Py}thon {\color{blue}Exp}erimental {\color{blue}Lab}
-%   {\color{blue}Sys}tems (Best acronym ever!)
-%   \begin{itemize}
-%   \item Drivers for experimental equipment
-%   \item File parsers for 3-rd party data files
-%   \item Infrastructure for a network driven, decentralized, lab:
-%     \begin{itemize}
-%     \item Database logging
-%     \item Wrappers around sockets and socket servers
-%     \item Modules for live data transfer to webpages
-%     \end{itemize}
-%   \end{itemize}
-% \end{frame}
-
 \begin{frame}
   \frametitle{Outline}
 
@@ -109,7 +77,7 @@
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Defaultdict}
+  \frametitle{defaultdict}
   \begin{minted}{python}
     from collections import defaultdict
     groups = defaultdict(default_callable)
@@ -155,8 +123,8 @@
     from operator import itemgetter, attrgetter
   \end{minted}
   \begin{block}{\vspace*{-3ex}}
-    Gives you a function that returns a numbered element from an
-    iterable or a specific attribute from an object
+    Gives you a function that returns an element from an iterable or dict
+    or a specific attribute from an object
   \end{block}
   \begin{itemize}
   \item {\color{darkred}EXTREMELY} usefull as \texttt{key} functions for
@@ -185,14 +153,15 @@
     filled out
   \end{itemize}
   \begin{center}
-    \texttt{LIVE! Example ex3\_itemgetter\_attrgetter.py}
+    \texttt{LIVE! Example ex4\_partial.py}\\
+    \texttt{LIVE! Example ex5\_partial\_valve\_control.py}
   \end{center}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{namedtuple}
   \begin{minted}{python}
-    from collections import partial
+    from collections import namedtuple
   \end{minted}
   \begin{block}{\vspace*{-3ex}}
     Named tuples can be used to give your tuple like data structures a
@@ -206,6 +175,28 @@
   \begin{center}
     \texttt{LIVE! Example ex6\_namedtuple.py}
   \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{choise}
+  \begin{minted}{python}
+    from random import choice
+  \end{minted}
+  \begin{block}{\vspace*{-3ex}}
+    Pick an element from an iterable at random.
+  \end{block}
+  \begin{center}
+    \texttt{LIVE! Example ex7\_choice.py}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Summary}
+  \begin{itemize}
+  \item The standard library has lots of little tools
+  \item It is worth it to look for them, when needing them instead of
+    rolling your own
+  \end{itemize}
 \end{frame}
 
 % \begin{frame}[fragile]
