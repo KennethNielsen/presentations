@@ -1,0 +1,86 @@
+Slides:
+
+
+= Intro =
+
+1. Me, what I am doing here
+
+2. I will not instruct you, but simply motivate and inform
+
+3. Credits
+
+4. git != svn
+
+5. Learn another tool by abstracting away concepts. Not this time.
+
+
+
+= Network structure =
+
+1. SVN vs. git
+
+2. All just nodes, no special (one true) server
+
+3. Flexibility, (bad assumptions), maybe more than you need
+
+4. clone
+
+5. remote
+
+6. Gitlab workflow
+
+7. Gitlab with an extra point
+
+8. (Almost) everything is local
+
+
+
+= How they think about their data =
+
+1. Fundamentally different (file based delta storage vs. snapshot)
+
+2. SVN file based delta storage
+
+3. git snapshots
+
+4. "add" means something completely different
+
+5. git staging area (cool)
+
+
+
+= Gits data structures =
+
+1. Blobs, manifests and commits
+
+2. Save in files by hash
+
+2. Branches are pointers into a tree of commits (no copy)
+
+
+
+= Branches =
+
+1. Increadibly cheap and git is very good at merging them
+
+2. Gitlab workflow (no-one else sees your branches)
+
+3. Cheap; feature work, save point, experiment etc.
+
+4. The stash trick
+
+
+
+= Gitlab workflow =
+
+19. Setup
+
+20. Workflow
+
+21. Overhead?!?
+
+
+
+= Summary =
+
+22. Summary
