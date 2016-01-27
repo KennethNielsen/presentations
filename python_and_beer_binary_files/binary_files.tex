@@ -12,7 +12,7 @@
 \usepackage{minted}
 
 \title{Parsing and Reverse Engineering of Binary Files}
-\subtitle{Lessons learned}
+\subtitle{Lessons learned\newline{}\small{}so far}
 \author{Kenneth Nielsen\inst{1}}
 \institute
 {
@@ -57,18 +57,6 @@
     \texttt{http://bit.ly/1FclzDR}
   \end{block}
 \end{frame}
-
-% \begin{frame}
-%   \frametitle{Outline}
-%   \begin{itemize}
-%   \item What do I mean by binary file?
-%   \item Binary representation of data
-%   \item Tools for the job
-%   \item Typical anatomy of a binary file
-%   \item Parsing the header
-%   \item Parsing the data
-%   \end{itemize}
-% \end{frame}
 
 \section{What do I mean by binary file}
 
@@ -125,7 +113,7 @@
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{One set of bits, many meanings}
+  \frametitle{One set of bytes, many meanings}
   \scriptsize
   \begin{minted}{text}
     The bytes ['0x50', '0x79', '0x74', '0x68', '0x6f', '0x6e', '0x20', '0xFF']
@@ -173,7 +161,7 @@
   \begin{itemize}
   \item \texttt{unpack(fmt, string)}
   \item \texttt{pack(fmt, v1, v2, ...)}
-  \item   \texttt{  calcsize(fmt)}
+  \item \texttt{calcsize(fmt)}
   \end{itemize}
   make up the core of the functionality\newline
   \newline
@@ -209,28 +197,176 @@
   \end{minted}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{With a format specification}
+  \begin{itemize}
+  \item Depending on the implementation language, figure out what the integer names means
+  \item By use of the specifcation, build up the formats
+  \item Parse with \texttt{struct.unpack}
+  \end{itemize}
+\end{frame}
+
 \section{Typical anatomy of a binary file}
+\begin{frame}[fragile]
+  \frametitle{Typical anatomy of a binary file}
+  \begin{columns}[onlytextwidth]
+    \begin{column}{0.4\textwidth}
+      A binary file may be layed out as:
+      \begin{itemize}
+      \item For multipart files, an index
+      \item A header (metadata)
+      \item The data
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.6\textwidth}
+      \begin{minted}{text}
+        Multipart     Single part
+
+        +--------+    +--------+
+        | Index  |    | Header |
+        |--------|    |--------|
+        |Header 1|    |        |
+        |Data 1  |    |  Data  |
+        |--------|    |        |
+        |Header 2|    +--------+
+        |Data 2  |
+        +--------+
+      \end{minted}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Empty space}
+  \begin{columns}[onlytextwidth]
+    \begin{column}{0.4\textwidth}
+      The header may be sparse, with padding (of zero bytes) in between information items
+    \end{column}
+    \begin{column}{0.6\textwidth}
+      \begin{minted}{text}
+        +----------------+
+        |ID14....Comment.|
+        |....x-axis unit.|
+        |................|
+        |.Date...........|
+        |......95365.....|
+        +----------------+
+      \end{minted}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\section{Parsing the data}
+
 \begin{frame}
-  \frametitle{TODO}
+  \frametitle{Get an export of the data file}
+  \begin{alertblock}{Get an export of any kind}
+    Although the purpose of the exercise is to be able to read the
+    binary files directly, having an export of both data and metadata
+    for a few files to compare with is invaluable (maybe
+    indispensable)\newline
+    \newline
+    From this export extract information about the number of data points
+    and as much metadata as possible
+  \end{alertblock}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Finding the data}
+  \begin{columns}[onlytextwidth]
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}
+      \item Use the hex editor
+      \item In the case of a sparse header, look for when the data becomes
+        dense and repeats in a pattern
+      \item In the case of a dense header, without any clear start of
+        data, calculate backwards from the end with the maximum number of
+        bytes per point
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{minted}{text}
+        +----------------+
+        |ID14....Comment.|
+        |....x-axis unit.|
+        |................|
+        |.Date...........|
+        |................|
+        |................|
+        |....3761....9578|
+        |....7A74....8943|
+        |....5679....9578|
+        |....6899....7536|
+        |....5478....1234|
+        +----------------+
+      \end{minted}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Analyze (Important}
+  \begin{itemize}
+  \item Measure how many bytes of data there is per point
+  \item Is both x and y saved (xxxyyy or xyxyxy), or only y
+  \item \textbf{NOTE:} That the data in the file, does not need to
+    correspond to the expected data directly
+  \item It may be scaled e.g. ADC integers instead of floats
+  \item Compare with the export and see if there is a consistent
+    scaling factor (or linear scaling relation)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Read until there is no more}
+  \begin{minted}{python}
+    data = []
+    with open('FID1A.ch', 'rb') as file_:
+        file_.seek(6144)
+        raw = file_.read(8)
+        while len(raw) == 8:
+            data.append(unpack('<d', raw)[0])
+            raw = file_.read(8)
+    points = numpy.array(data)    
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Calculate number of points beforehand}
+  \begin{minted}{python}
+    with open('FID1A.ch', 'rb') as file_:
+        file_.seek(0, 2)  # Seek to the end of the file
+        end = file_.tell()
+        num_points = (end - 6144) // 8
+        file_.seek(6144)
+        raw = file_.read(end - 6144)
+        data = unpack('<' + 'd' * num_points, raw)
+    points = numpy.array(data)
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Parse directly into numpy array}
+  \begin{minted}{python}
+    with open('FID1A.ch', 'rb') as file_:
+        file_.seek(0, 2)  # Seek to the end of the file
+        end = file_.tell()
+        num_points = (end - 6144) // 8
+        file_.seek(6144)
+        points = numpy.fromfile(file_, dtype='<d', count=num_points)
+  \end{minted}
+\end{frame}
+
+\begin{frame}
+  \frametitle{DEMO}
+  \huge
+  data.py
 \end{frame}
 
 \section{Parsing the header}
 \begin{frame}
   \frametitle{TODO}
 \end{frame}
-
-\section{Parsing the data}
-\begin{frame}
-  \frametitle{TODO}
-\end{frame}
-
-% 
-% \begin{frame}[fragile]
-%   \frametitle{Decorators}
-% \begin{minted}{python}
-% @my_decorator
-% def my_function():
-%     pass
-% \end{minted}
 
 \end{document}
