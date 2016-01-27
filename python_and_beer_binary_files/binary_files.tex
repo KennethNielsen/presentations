@@ -1,0 +1,236 @@
+\documentclass{beamer}
+
+%\usetheme{Warsaw}
+\usecolortheme{orchid}
+
+%\usepackage{listings}
+%\lstset{language=Python}
+
+\usepackage{color}
+\definecolor{darkred}{RGB}{180,0,0}
+
+\usepackage{minted}
+
+\title{Parsing and Reverse Engineering of Binary Files}
+\subtitle{Lessons learned}
+\author{Kenneth Nielsen\inst{1}}
+\institute
+{
+  \inst{1}%
+  Center for Individual Nanoparticle Functionality (CINF)\\
+  Institute of Physics\\
+  Technical University of Denmark (DTU)
+}
+\date{
+  Python and beers presentation,\\
+  Aprils 29, 2015}
+\subject{Computer Science}
+
+\AtBeginSection[]
+{
+  \begin{frame}<beamer>
+    \frametitle{Outline}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\section{About me}
+
+\begin{frame}
+  \frametitle{About me}
+  \begin{itemize}
+    \item My name is Kenneth Nielsen and I work at CINF
+    \item Free and open source software (FOSS) enthusiast
+    \item Use way too much time on python conference presentations on
+      youtube
+  \end{itemize}
+  \begin{block}{Slides and examples}
+    \center
+    \footnotesize
+    \texttt{git clone https://github.com/KennethNielsen/presentations.git}\newline
+    \newline
+    \texttt{https://github.com/KennethNielsen/presentations}
+    \texttt{http://bit.ly/1FclzDR}
+  \end{block}
+\end{frame}
+
+% \begin{frame}
+%   \frametitle{Outline}
+%   \begin{itemize}
+%   \item What do I mean by binary file?
+%   \item Binary representation of data
+%   \item Tools for the job
+%   \item Typical anatomy of a binary file
+%   \item Parsing the header
+%   \item Parsing the data
+%   \end{itemize}
+% \end{frame}
+
+\section{What do I mean by binary file}
+
+\begin{frame}
+  \frametitle{What do I mean by binary file?}
+  \begin{block}{The narrow definition}
+    \begin{itemize}
+    \item Not clear text e.g. xml, json or custom text format
+    \item Simple binary files!
+    \item Concatenation of binary representation of values
+    \item No type information
+    \item No third party serialization
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Binary representation of data}
+  \begin{block}{It's all bits}
+    \begin{itemize}
+    \item Computers only know about bits (1000101010111010101)
+    \item The \textbf{type} of the data is what gives the bits meaning (converts it to a \textbf{value})
+    \item For the values, one or more bytes can be used, depending on the requirements
+    \end{itemize}
+  \end{block}
+  Examples of data types are:
+  \begin{itemize}
+  \item Signed and unsigned integers: short (int8), unsigned long (uint64)
+  \item Booleans (commonly a special case of a 1 byte integer)
+  \item Floats and doubles: 4 or 8 bytes floating point numbers
+  \item Strings..!
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Endianness}
+  \begin{alertblock}{The order of bytes in multi byte types}
+    To make matters worse, different ``computer'' architectures does
+    not agree on in which order bytes in a multi byte type should be
+    stored!\newline
+    \newline
+    \textbf{This is referred to as the ``endianness''}
+  \end{alertblock}
+  From wikipedia: https://en.wikipedia.org/wiki/Endianness\newline
+  \begin{quotation}
+    With big-endian the most significant byte of a word is stored at a
+    particular memory address and the subsequent bytes are stored in
+    the following higher memory addresses, the least significant byte
+    thus being stored at the highest memory address. Little-endian
+    format reverses the order and stores the least significant byte at
+    the lower memory address with the most significant byte being
+    stored at the highest memory address
+  \end{quotation}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{One set of bits, many meanings}
+  \scriptsize
+  \begin{minted}{text}
+    The bytes ['0x50', '0x79', '0x74', '0x68', '0x6f', '0x6e', '0x20', '0xFF']
+                   char[] : b'Python \xff'
+    Not relevant     int8 : (80, 121, 116, 104, 111, 110, 32, -1)
+    Not relevant    uint8 : (80, 121, 116, 104, 111, 110, 32, 255)
+    Little-Endian   int16 : (31056, 26740, 28271, -224)
+    Big-Endian      int16 : (20601, 29800, 28526, 8447)
+    Little-Endian  uint16 : (31056, 26740, 28271, 65312)
+    Big-Endian     uint16 : (20601, 29800, 28526, 8447)
+    Little-Endian   int32 : (1752463696, -14651793)
+    Big-Endian      int32 : (1350136936, 1869488383)
+    Little-Endian  uint32 : (1752463696, 4280315503)
+    Big-Endian     uint32 : (1350136936, 1869488383)
+    Little-Endian   int64 : (-62928970010298032,)
+    Big-Endian      int64 : (5798793987111133439,)
+    Little-Endian  uint64 : (18383815103699253584,)
+    Big-Endian     uint64 : (5798793987111133439,)
+    Little-Endian   float : (4.6179809698425413e+24, -2.1324988332749138e+38)
+    Big-Endian      float : (16740622336.0, 7.369732216716093e+28)
+    Little-Endian  double : (-2.2536157545457443e+304,)
+    Big-Endian     double : (4.715928068041943e+79,)
+  \end{minted}
+  \normalsize
+  There are 19 lines here! Luckily, often the endianness is known, which reduces it to 11.
+\end{frame}
+
+\section{Tools for the job}
+\begin{frame}
+  \frametitle{The hex editor}
+  \begin{block}{Your friend, the hex editor}
+    \begin{itemize}
+    \item At first intimidating and difficult to make sense of
+    \item Then ... \textbf{incredibly} useful
+    \end{itemize}  
+  \end{block}
+  \huge
+  \vspace{2cm}
+  Demonstration!
+\end{frame}
+
+\begin{frame}
+  \frametitle{The \texttt{struct} module}
+  3 module functions:\newline
+  \begin{itemize}
+  \item \texttt{unpack(fmt, string)}
+  \item \texttt{pack(fmt, v1, v2, ...)}
+  \item   \texttt{  calcsize(fmt)}
+  \end{itemize}
+  make up the core of the functionality\newline
+  \newline
+  Most of the time we will just be using \texttt{unpack}.
+  \huge
+  Demontration!
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{With a format specification}
+  Edited version of the specification of the \AA{}rhus type STM file format: http://owww.phys.au.dk/spm/programs/
+  \footnotesize
+  \begin{minted}{pascal}
+    // Each image consists of a label record defined as follows:
+    la=
+    record
+      //size in blocks, xch,ych are x,y pixels.
+      nr,size,xch,ych,zch:smallint;
+      //In Turbo Pascal format (year, month, day, hour, min, sec in 16
+      //bit integers)
+      time:datetime;
+      xsize,ysize,xshift,yshift,zscale,tilt:smallint;
+      speed:word; { now time in 10mS units 921221 S3 vers 6}
+      // bias is -+10V for +-32 k  current is in 0.01 nA units
+      bias,current:smallint;
+      sample,title:string[20];
+      postpr,postd1,constheight, { 910110 -constheight/postd2- }
+      Currfac,R_Nr:smallint; { 930118 -Currfac/min- 931009 -R_Nr/max- }
+      unitnr:smallint;  { 890612 }
+      version:smallint;
+      spare:array[48..63] of smallint;
+    end;
+  \end{minted}
+\end{frame}
+
+\section{Typical anatomy of a binary file}
+\begin{frame}
+  \frametitle{TODO}
+\end{frame}
+
+\section{Parsing the header}
+\begin{frame}
+  \frametitle{TODO}
+\end{frame}
+
+\section{Parsing the data}
+\begin{frame}
+  \frametitle{TODO}
+\end{frame}
+
+% 
+% \begin{frame}[fragile]
+%   \frametitle{Decorators}
+% \begin{minted}{python}
+% @my_decorator
+% def my_function():
+%     pass
+% \end{minted}
+
+\end{document}
