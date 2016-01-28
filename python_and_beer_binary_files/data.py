@@ -30,7 +30,7 @@ def version2():
         num_points = (end - 6144) // 8
         file_.seek(6144)
         raw = file_.read(end - 6144)
-        data = unpack('<' + 'd' * num_points, raw)
+        data = unpack('<{}d'.format(num_points), raw)
     return numpy.array(data)
 
 

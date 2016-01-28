@@ -7,9 +7,6 @@
 
 \usepackage{minted}
 
-%\titlegraphic{}
-%   \includegraphics[width=0.2\textwidth]{binary_heart}
-
 \title{Parsing and Reverse Engineering Binary Files}
 \subtitle{Lessons learned...\newline{}\small{}so far...}
 \author{Kenneth Nielsen (CINF)}
@@ -46,7 +43,7 @@
   \begin{itemize}
     \item My name is Kenneth Nielsen and I work at CINF
     \item Free and open source software (FOSS) enthusiast
-    \item Use way too much time on python conference presentations on
+    \item Use way too much time on Python conference presentations on
       youtube
   \end{itemize}
   \begin{block}{Slides and examples}
@@ -65,7 +62,7 @@
   \frametitle{Introduction}
   \begin{itemize}
   \item Parse binary file format, simpler format is unavailable
-  \item E.g. pull data of if instrument file
+  \item E.g. pull data out of files created by instrument software
   \item With or without specification (emphasis is on without)
   \item More talk of techniques than code (though there is some at the end)
   \item Some talk about binary data in general
@@ -78,7 +75,7 @@
   \frametitle{What do I mean by binary file?}
   \begin{block}{The narrow definition}
     \begin{itemize}
-    \item Not clear text e.g. xml, json or custom text format
+    \item Not clear text e.g. XML, JSON or custom text format
     \item Simple binary files!
     \item Concatenation of binary representation of values
     \item No type information
@@ -113,9 +110,9 @@
     \item Text is stored in an encoding
     \item Many (all?) encoding contains ASCII at the first 128 positions
     \item Which means that it is recognizable
-    \item After parsing should be decoded
-    \item Some decodings are fixed width other variable
-    \item Sometimes the string is prepended with the number of bytes
+    \item After parsing, bytes should be decoded
+    \item Some encodings are fixed width other variable
+    \item Sometimes the string is prefixed with the number of bytes
     \item It's a pain
     \end{itemize}
   \end{block}
@@ -125,11 +122,13 @@
   \frametitle{Endianness}
   \begin{alertblock}{The order of bytes in multi byte types}
     To make matters worse, different ``computer'' architectures does
-    not agree on in which order bytes in a multi byte type should be
+    not agree on in which order bytes in a multi-byte type should be
     stored!\newline
     \newline
     \textbf{This is referred to as the ``endianness''}
   \end{alertblock}
+  \vspace{0.5cm}
+  \small
   From wikipedia: https://en.wikipedia.org/wiki/Endianness\newline
   \begin{quotation}
     With big-endian the most significant byte of a word is stored at a
@@ -232,9 +231,22 @@
   \frametitle{With a format specification}
   \begin{itemize}
   \item Depending on the implementation language, figure out what the integer names means
-  \item By use of the specifcation, build up the formats
+  \item By use of the specification, build up the formats
   \item Parse with \texttt{struct.unpack}
   \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Without a format specification}
+  Look for information anywhere you can find it:
+  \begin{itemize}
+  \item (Half) implementations on the internet
+  \item Possibly in other languages
+  \item Online discussions
+  \end{itemize}
+  Some information is much better than no information.\newline
+  \newline
+  \textbf{Other than that, hang on tight for the rest of the ride.}
 \end{frame}
 
 \section{Typical anatomy of a binary file}
@@ -242,7 +254,7 @@
   \frametitle{Typical anatomy of a binary file}
   \begin{columns}[onlytextwidth]
     \begin{column}{0.4\textwidth}
-      A binary file may be layed out as:
+      A binary file may have a layout as:
       \begin{itemize}
       \item For multipart files, an index
       \item A header (metadata)
@@ -356,11 +368,11 @@
   \item \texttt{fileobject.read()}    Read it all
   \item \texttt{for line in fileobject:}    Iterate over lines in the file
   \end{itemize}
-  But fileobject also have a ``cursor'', which is really useful. Wwhen
+  But fileobject also have a ``cursor'', which is really useful. When
   working with binary data:
   \begin{itemize}
   \item \texttt{fileobject.read(n)}    Read n bytes
-  \item \texttt{fileobject.seek(n, origin)}    Seek to byte n
+  \item \texttt{fileobject.seek(n, origin)}    Seek to byte n from origin
   \item \texttt{fileobject.tell()}    Get current position
   \end{itemize}
 \end{frame}
@@ -388,7 +400,7 @@
         num_points = (end - 6144) // 8
         file_.seek(6144)
         raw = file_.read(end - 6144)
-        data = unpack('<' + 'd' * num_points, raw)
+        data = unpack('<{}d'.format(num_points), raw)
     points = numpy.array(data)
   \end{minted}
 \end{frame}
@@ -405,7 +417,7 @@
                                 count=num_points)
   \end{minted}
   \vspace{1cm}
-  \huge DEME data.py
+  \huge DEMO data.py
 \end{frame}
 
 \section{Parsing the header}
@@ -416,7 +428,7 @@
   \begin{itemize}
   \item Use of a hex editor
   \item Searching for it by brute force
-  \item Changing just settings and look for differences in similar headers
+  \item Changing just one settings and look for differences in similar headers
   \end{itemize}    
   \end{block}
 \end{frame}
@@ -443,7 +455,7 @@ def find_number(value, filename, header_end, endiannes='>'):
                     print('YATZY! Found value {} at index {}'.\
                           format(value, index))
   \end{minted}
-  \LARGE DEMO
+  \LARGE DEMO header\_tools.py
 \end{frame}
 
 
@@ -484,7 +496,7 @@ def bytes_diff(filename1, filename2, header_end):
                 start_pos = None
                 diff1, diff2 = b'', b''
   \end{minted}
-  \LARGE DEMO
+  \LARGE DEMO header\_tools.py
 \end{frame}
 
 \begin{frame}[fragile]
@@ -540,8 +552,67 @@ def parse_header(file_):
   \LARGE DEMO header.py
 \end{frame}
 
+\begin{frame}
+  \frametitle{That's it}
+  The file is now parsed and we know something about how to read binary files!
+  \vspace{0.5cm}
+  \begin{alertblock}{Resist the temptation}
+    Some of you may at this point feel an itching to try and
+    \textit{make} a binary format of your own i.e. write binary files
+    instead of reading them, because it somehow feel like the
+    \textit{right} way to store stuff. \textbf{DON'T!!!}.\newline
+    
+    Wide use of custom format binary files is mostly a thing of the
+    past. In the year 2016 custom format binary should \textbf{only}
+    be used if it is absolutely necessary. Most things can be handled
+    by simply using two files, one for the numpy data (which can write
+    itself) and one of the metadate e.g. in JSON. If you really need a
+    single file format with high space and read/write efficiency look
+    into HDF5.
+  \end{alertblock}
+\end{frame}
 
+\section{Summary}
+\begin{frame}
+  \frametitle{Summary, tools}
+  \begin{itemize}
+  \item A hex editor
+  \item Struct
+  \end{itemize}
+\end{frame}
 
+\begin{frame}
+  \frametitle{Summary, anatomy}
+  \begin{itemize}
+  \item Header
+  \item Data
+  \item Possibly an index, for multipart files
+  \end{itemize}
+\end{frame}
 
+\begin{frame}
+  \frametitle{Summary, data}
+  \begin{itemize}
+  \item Look for data with hex editor
+  \item Calculate backwards from the known number of points
+  \item Parse with struct
+  \item Or directly into numpy.array
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Summary, header (metadata)}
+  \begin{itemize}
+  \item Look for fields with hex editor
+  \item Search for known numbers
+  \item Look at differences
+  \item Write out a table of known fields
+  \item Parse with struct
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \huge Questions?
+\end{frame}
 
 \end{document}
