@@ -1,25 +1,22 @@
 \documentclass{beamer}
 
-%\usetheme{Warsaw}
 \usecolortheme{orchid}
-
-%\usepackage{listings}
-%\lstset{language=Python}
 
 \usepackage{color}
 \definecolor{darkred}{RGB}{180,0,0}
 
 \usepackage{minted}
 
-\title{Parsing and Reverse Engineering of Binary Files}
-\subtitle{Lessons learned\newline{}\small{}so far}
-\author{Kenneth Nielsen\inst{1}}
+%\titlegraphic{}
+%   \includegraphics[width=0.2\textwidth]{binary_heart}
+
+\title{Parsing and Reverse Engineering Binary Files}
+\subtitle{Lessons learned...\newline{}\small{}so far...}
+\author{Kenneth Nielsen (CINF)}
 \institute
 {
-  \inst{1}%
-  Center for Individual Nanoparticle Functionality (CINF)\\
-  Institute of Physics\\
-  Technical University of Denmark (DTU)
+      \includegraphics[width=0.25\textwidth]{binary_heart}\newline
+      https://xkcd.com/99/
 }
 \date{
   Python and beers presentation,\\
@@ -36,9 +33,13 @@
 
 \begin{document}
 
+\begin{frame}
+  
+\end{frame}
+
 \frame{\titlepage}
 
-\section{About me}
+%\section{About me}
 
 \begin{frame}
   \frametitle{About me}
@@ -56,6 +57,19 @@
     \texttt{https://github.com/KennethNielsen/presentations}
     \texttt{http://bit.ly/1FclzDR}
   \end{block}
+\end{frame}
+
+\section{Introduction}
+
+\begin{frame}
+  \frametitle{Introduction}
+  \begin{itemize}
+  \item Parse binary file format, simpler format is unavailable
+  \item E.g. pull data of if instrument file
+  \item With or without specification (emphasis is on without)
+  \item More talk of techniques than code (though there is some at the end)
+  \item Some talk about binary data in general
+  \end{itemize}
 \end{frame}
 
 \section{What do I mean by binary file}
@@ -89,6 +103,22 @@
   \item Floats and doubles: 4 or 8 bytes floating point numbers
   \item Strings..!
   \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Strings}
+  1 min in bytes and encodings (which is really a presentation on its own)
+  \begin{block}{We can only store bytes}
+    \begin{itemize}
+    \item Text is stored in an encoding
+    \item Many (all?) encoding contains ASCII at the first 128 positions
+    \item Which means that it is recognizable
+    \item After parsing should be decoded
+    \item Some decodings are fixed width other variable
+    \item Sometimes the string is prepended with the number of bytes
+    \item It's a pain
+    \end{itemize}
+  \end{block}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -138,7 +168,7 @@
     Big-Endian     double : (4.715928068041943e+79,)
   \end{minted}
   \normalsize
-  There are 19 lines here! Luckily, often the endianness is known, which reduces it to 11.
+  There are 19 lines here! Luckily, often the endianness is known, which reduces it to 11
 \end{frame}
 
 \section{Tools for the job}
@@ -152,7 +182,7 @@
   \end{block}
   \huge
   \vspace{2cm}
-  Demonstration!
+  DEMO ghex
 \end{frame}
 
 \begin{frame}
@@ -166,8 +196,9 @@
   make up the core of the functionality\newline
   \newline
   Most of the time we will just be using \texttt{unpack}.
-  \huge
-  Demontration!
+  \vspace{1cm}
+  \huge\newline
+  DEMO in the terminal!
 \end{frame}
 
 \begin{frame}[fragile]
@@ -306,7 +337,7 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Analyze (Important}
+  \frametitle{Analyze (Important)}
   \begin{itemize}
   \item Measure how many bytes of data there is per point
   \item Is both x and y saved (xxxyyy or xyxyxy), or only y
@@ -315,6 +346,22 @@
   \item It may be scaled e.g. ADC integers instead of floats
   \item Compare with the export and see if there is a consistent
     scaling factor (or linear scaling relation)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Quick detour on file objects}
+  When working with text:
+  \begin{itemize}
+  \item \texttt{fileobject.read()}    Read it all
+  \item \texttt{for line in fileobject:}    Iterate over lines in the file
+  \end{itemize}
+  But fileobject also have a ``cursor'', which is really useful. Wwhen
+  working with binary data:
+  \begin{itemize}
+  \item \texttt{fileobject.read(n)}    Read n bytes
+  \item \texttt{fileobject.seek(n, origin)}    Seek to byte n
+  \item \texttt{fileobject.tell()}    Get current position
   \end{itemize}
 \end{frame}
 
@@ -354,19 +401,147 @@
         end = file_.tell()
         num_points = (end - 6144) // 8
         file_.seek(6144)
-        points = numpy.fromfile(file_, dtype='<d', count=num_points)
+        points = numpy.fromfile(file_, dtype='<d',
+                                count=num_points)
   \end{minted}
-\end{frame}
-
-\begin{frame}
-  \frametitle{DEMO}
-  \huge
-  data.py
+  \vspace{1cm}
+  \huge DEME data.py
 \end{frame}
 
 \section{Parsing the header}
 \begin{frame}
-  \frametitle{TODO}
+  \frametitle{The big ``Can you spot the number in the big pile of numbers'' game}
+  \LARGE
+  \begin{block}{Look for know metadata items from your export by:}
+  \begin{itemize}
+  \item Use of a hex editor
+  \item Searching for it by brute force
+  \item Changing just settings and look for differences in similar headers
+  \end{itemize}    
+  \end{block}
 \end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Brute force search}
+  \small
+  \begin{minted}{python}
+def find_number(value, filename, header_end, endiannes='>'):
+    """Look for value in file named filename"""
+    if isinstance(value, float):
+        formats = 'fd'
+    else:
+        formats = 'bBhHiIqQ'
+
+    with open(filename, 'rb') as file_:
+        for index in range(header_end):
+            for format_ in formats:
+                file_.seek(index)
+                raw = file_.read(calcsize(format_))
+                value_at_index = \
+                    unpack(endiannes + format_, raw)[0]
+                if equal_or_close(value, value_at_index):
+                    print('YATZY! Found value {} at index {}'.\
+                          format(value, index))
+  \end{minted}
+  \LARGE DEMO
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Look for differences, part1}
+  \small
+  \begin{minted}{python}
+def bytes_diff(filename1, filename2, header_end):
+    """Calculate bytes diff"""
+    # Get the bytes
+    byte_strings = []
+    for filename in [filename1, filename2]:
+        with open(filename, 'rb') as file_:
+            byte_strings.append(file_.read(header_end))
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Look for differences, part2}
+  \small
+  \begin{minted}{python}
+    start_pos = None
+    diff1, diff2 = b'', b''
+    for index, (byte1, byte2) in enumerate(zip(*byte_strings)):
+        # In Python 3, iterating over bytes gives you numbers!
+        if sys.version_info.major == 3:
+            byte1, byte2 = bytes([byte1]), bytes([byte2])
+        # Compare
+        if byte1 != byte2:
+            if start_pos is None:
+                start_pos = index
+            diff1 += byte1
+            diff2 += byte2
+        else:
+            if start_pos is not None:
+                print('At index:', start_pos)
+                print(repr(diff1) + '\n' + repr(diff2) + '\n')
+                start_pos = None
+                diff1, diff2 = b'', b''
+  \end{minted}
+  \LARGE DEMO
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Parse the header, part 1, table of fields}
+  \small
+  \begin{minted}{python}
+fields = (
+    ('sequence_line_or_injection', 252, UINT16),
+    ('injection_or_sequence_line', 256, UINT16),
+    ('start_time', 282, 'x-time'),
+    ('end_time', 286, 'x-time'),
+    ('version_string', 326, 'utf16'),
+    ('description', 347, 'utf16'),
+    ('sample', 858, 'utf16'),
+    ('operator', 1880, 'utf16'),
+    ('date', 2391, 'utf16'),
+    ('inlet', 2492, 'utf16'),
+    ('instrument', 2533, 'utf16'),
+    ('method', 2574, 'utf16'),
+    ('software version', 3601, 'utf16'),
+    ('software name', 3089, 'utf16'),
+    ('software revision', 3802, 'utf16'),
+    ('units', 4172, 'utf16'),
+    ('detector', 4213, 'utf16'),
+    ('yscaling', 4732, ENDIAN + 'd')
+)
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Parse the header, part 2}
+  \small
+  \begin{minted}{python}
+def parse_header(file_):
+    metadata = {}
+    # Parse all metadata fields
+    for name, offset, type_ in fields:
+        file_.seek(offset)
+        if type_ == 'utf16':
+            metadata[name] = parse_utf16_string(file_)
+        elif type_ == 'x-time':
+            metadata[name] =\
+                unpack(ENDIAN + 'f', file_.read(4))[0] / 60000
+        else:
+            metadata[name] =\
+                unpack(type_, file_.read(calcsize(type_)))[0]
+
+    # Convert date
+    metadata['datetime'] = time.strptime(metadata['date'],
+                                         '%d-%b-%y, %H:%M:%S')
+    return metadata
+  \end{minted}
+  \LARGE DEMO header.py
+\end{frame}
+
+
+
+
 
 \end{document}
