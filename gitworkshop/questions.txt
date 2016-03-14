@@ -1,0 +1,36 @@
+
+Questions
+=========
+
+1) Med remote tracking af en gren, vil git status så fortælle om man er bagud eller foran?
+
+git branch -vv                            (includes information about the tracking branch)
+git branch --set-upstream remote/branch   (updates the branch that it is tracking)
+
+git fetch --all                           (Henter fra alle remotes)
+
+
+
+2) How to you undo a commit from long ago?
+
+A: If it has been seen by others, you cannot undo the commit at that point in the history. Git is immutable
+To undo it at the current point the in history use: git revert <commit>
+
+
+
+3) Syntaks for git diff
+
+???
+
+
+
+4) Man laver et merge request (MR) for en feature.  Mens man venter på at den bliver accepteret til upstream master vil man gerne arbejde på en ny feature som afhænger af den første (evt. lave et nyt MR).  Hvordan gør man det? 
+
+
+
+
+5) What is that "FETCH_HEAD" doing in the first step of the manual merge procedure on gitlab
+
+The recipy is in separate file.
+
+A: When you fetch without using a remote, no branches are created/updated, only the object are fetched. The FETCH_HEAD is then a file (.git/FETCH_HEAD) which contains information about the last thing that you fetched, including the branch names and hashes. So the second command creates a local branch from the reference located in that file. EXTRA: Most likely the recipy is made in this way to make it possible for you (as a maintainer) to do the manual merge, without having to create a remote for every single contributor.
