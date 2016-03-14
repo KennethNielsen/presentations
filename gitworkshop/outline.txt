@@ -1,0 +1,27 @@
+ 1) At prøve gitlab workflow:
+  a) Forgrene et upstream til sig selv på github
+  b) Klone det ned til sin egen computer
+  c) Lave en arbejdsgren
+  d) Ændre filer
+  e) Se diff
+  f) Committe
+  g) Lave merge request
+  h) Svare på feedback inklusive lave ekstra commits som retter noget
+
+2) Se på logge og undersæt af logge
+
+3) Tale om de forskellige måder man (noget tid efter at man har forgrenet) kan forgrene sin nye arbejdsgren fra den nyeste tilstand i upstream master
+
+4) Tale om hvordan man kan sikrer sig mest muligt mod mergekonfliter, ved at merge eller rebase fra upstream master, før man sender sin merge request.
+
+Derudover et par mindre, men alligevel vigtige emner:
+
+5) Hvordan man bruger "add" i den interaktive tilstand, hvor man kan nøjes med at tilføje dele af den fil man har arbejdet på til den næste commit
+
+6) Hvordan man omskriver (den del af) sin historik (som kun ligger hos en selv)
+
+Og til sidst, mest for sjov:
+
+7) Hvordan man bruger git bisect til at finde det commit som introducered en fejl
+
+8) Hvordan man napser et enkelt commit fra en anden gren med cherry pick 
