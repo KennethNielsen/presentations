@@ -1,0 +1,59 @@
+Outline:
+
+Re-hash from last time (+1 question)
+Main gitlab exercise
+Skipped from main:
+ How to make a new feature branch after some time
+ How to resolve conflicts
+Extra subjects
+ Special log views
+ add -p
+ Rewrite history (interactive rebase)
+ git bisect
+ git cherry pick
+ Make MR and then continue developing in continuation
+ FETCH_HEAD in manual merge recipy
+
+
+Main exercise
+=============
+
+ * Aliasses
+
+ * Find main group: KennethNielsenTeaching
+ * Fork it to your own profile (notice it says where it was forked from)
+ * Clone this repository to your computer (use the link on the GitLab page)
+ * Look around (status, log)
+ * Look at remote and add upstream
+ * Look at branches (also -a)
+ * Create new branch: git branch   or   git checkout -b
+ * Create commits (add and commit, status and diff along the way)
+ * Push with arguments
+ * Look around on GitLab (commits, branches)
+ * Make merge request
+ * Look at merge request (Discussion, commits, changes)
+ ### COFFEE BREAK ###
+ * Make comments
+ * Make revisions from review and push
+ * See that previous inline comments are marked as from an outdated diff
+ * More comments (user and reviewer)
+ * KILLER FEATURE OF GITLAB AND GITHUB
+ * Merge
+ * Celebrate
+
+
+
+Smaller topics and questions:
+=============================
+
+Tracking branch
+---------------
+Try push with no arguments, set to simple
+Set upstream, now push with no arguments work
+Checkout branch -vv
+
+commit -a
+---------
+For single commit changes to known files
+
+
