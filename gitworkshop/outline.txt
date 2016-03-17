@@ -1,12 +1,12 @@
- 1) At prøve gitlab workflow:
-  a) Forgrene et upstream til sig selv på github
-  b) Klone det ned til sin egen computer
-  c) Lave en arbejdsgren
-  d) Ændre filer
-  e) Se diff
-  f) Committe
-  g) Lave merge request
-  h) Svare på feedback inklusive lave ekstra commits som retter noget
+ 1) At prøve gitlab workflow: (v)
+  a) Forgrene et upstream til sig selv på github  (v)
+  b) Klone det ned til sin egen computer  (v)
+  c) Lave en arbejdsgren  (v)
+  d) Ændre filer  (v)
+  e) Se diff  (v)
+  f) Committe  (v)
+  g) Lave merge request  (v)
+  h) Svare på feedback inklusive lave ekstra commits som retter noget  (v)
 
 2) Se på logge og undersæt af logge
 

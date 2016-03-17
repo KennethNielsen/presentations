@@ -3,6 +3,7 @@ Outline:
 Re-hash from last time (+1 question)
 Main gitlab exercise
 Skipped from main:
+ Set up ssh access
  How to make a new feature branch after some time
  How to resolve conflicts
 Extra subjects
@@ -13,6 +14,13 @@ Extra subjects
  git cherry pick
  Make MR and then continue developing in continuation
  FETCH_HEAD in manual merge recipy
+
+
+
+
+
+
+
 
 
 Main exercise
@@ -40,6 +48,37 @@ Main exercise
  * KILLER FEATURE OF GITLAB AND GITHUB
  * Merge
  * Celebrate
+
+
+
+
+
+
+
+
+
+Skipped from main
+=================
+
+Setting up passwordless ssh access
+----------------------------------
+Click the link on GitLab:
+Generate key:
+ * ssh-keygen -t rsa -C "k.nielsen81@gmail.com"
+ * /home/kenni/.ssh/id_rsa_gitlab 
+ * cat /home/kenni/.ssh/id_rsa_gitlab 
+ * Paste on GitLab page
+ * Create a branch and push (without password)
+
+Make feature branch (really)
+----------------------------
+ * Talk from slides
+ * Try ASE workflow
+
+
+
+
+
 
 
 
