@@ -16,12 +16,7 @@ Extra subjects
  FETCH_HEAD in manual merge recipy
 
 
-
-
-
-
-
-
+NEWPAGE
 
 Main exercise
 =============
@@ -50,12 +45,7 @@ Main exercise
  * Celebrate
 
 
-
-
-
-
-
-
+NEWPAGE
 
 Skipped from main
 =================
@@ -75,24 +65,59 @@ Make feature branch (really)
  * Talk from slides
  * Try ASE workflow
 
+Resolve merge conflicts
+-----------------------
+By a merge
+Make conflict in cowsay: https://gitlab.com/KennethNielsen/python-cowsay
+Check if can be merged. Can't find it.
+Make conflicting branches, name them master-fix-with-merge, master-fix-with-rebase and feature_branch...*
+Try merging fix
+Try rebase fix
+git config --global mergetool.keepBackup false
 
 
-
-
-
-
+NEWPAGE
 
 Smaller topics and questions:
 =============================
+
+git help
+--------
+git help
+git help command
 
 Tracking branch
 ---------------
 Try push with no arguments, set to simple
 Set upstream, now push with no arguments work
 Checkout branch -vv
+QUESTION: git status shows behind or ahead???
 
-commit -a
----------
-For single commit changes to known files
+Adding in patch mode
+--------------------
+add -p
+Make several changes to a file and add and commit them one at a time
 
+log and log subsets
+-------------------
+Adding more branches to the log
+Do log subsets, in/not in syntax ^
+--grep something_something
 
+git diff
+--------
+branches, commits by hash, HEAD~1  (minus 1)
+
+Continued work on feature branch
+--------------------------------
+Try in terminal
+Remember to make commit to master, to make first merge a real merge
+
+Interactive rebase
+------------------
+Make example with two files, each with a fix
+
+Undo a commit from long ago
+---------------------------
+A: If it has been seen by others, you cannot undo the commit at that point in the history. Git is immutable
+To undo it at the current point the in history use: git revert <commit>

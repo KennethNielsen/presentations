@@ -8,15 +8,15 @@
   g) Lave merge request  (v)
   h) Svare på feedback inklusive lave ekstra commits som retter noget  (v)
 
-2) Se på logge og undersæt af logge
+2) Se på logge og undersæt af logge  (v)
 
-3) Tale om de forskellige måder man (noget tid efter at man har forgrenet) kan forgrene sin nye arbejdsgren fra den nyeste tilstand i upstream master
+3) Tale om de forskellige måder man (noget tid efter at man har forgrenet) kan forgrene sin nye arbejdsgren fra den nyeste tilstand i upstream master  (v)
 
-4) Tale om hvordan man kan sikrer sig mest muligt mod mergekonfliter, ved at merge eller rebase fra upstream master, før man sender sin merge request.
+4) Tale om hvordan man kan sikrer sig mest muligt mod mergekonfliter, ved at merge eller rebase fra upstream master, før man sender sin merge request.  (v)
 
 Derudover et par mindre, men alligevel vigtige emner:
 
-5) Hvordan man bruger "add" i den interaktive tilstand, hvor man kan nøjes med at tilføje dele af den fil man har arbejdet på til den næste commit
+5) Hvordan man bruger "add" i den interaktive tilstand, hvor man kan nøjes med at tilføje dele af den fil man har arbejdet på til den næste commit  (v)
 
 6) Hvordan man omskriver (den del af) sin historik (som kun ligger hos en selv)
 
