@@ -108,6 +108,9 @@ git diff
 --------
 branches, commits by hash, HEAD~1  (minus 1)
 
+Accidentally committed work on master:
+--------------------------------------
+
 Continued work on feature branch
 --------------------------------
 Try in terminal
