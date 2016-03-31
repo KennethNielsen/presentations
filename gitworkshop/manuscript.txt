@@ -67,12 +67,10 @@ Make feature branch (really)
 
 Resolve merge conflicts
 -----------------------
-By a merge
-Make conflict in cowsay: https://gitlab.com/KennethNielsen/python-cowsay
-Check if can be merged. Can't find it.
-Make conflicting branches, name them master-fix-with-merge, master-fix-with-rebase and feature_branch...*
+Clone https://gitlab.com/KennethNielsenTeaching/conflict.git
 Try merging fix
 Try rebase fix
+ Install kdiff3
 git config --global mergetool.keepBackup false
 
 
@@ -110,6 +108,8 @@ branches, commits by hash, HEAD~1  (minus 1)
 
 Accidentally committed work on master:
 --------------------------------------
+stash
+cherry-pick
 
 Continued work on feature branch
 --------------------------------
@@ -124,3 +124,38 @@ Undo a commit from long ago
 ---------------------------
 A: If it has been seen by others, you cannot undo the commit at that point in the history. Git is immutable
 To undo it at the current point the in history use: git revert <commit>
+
+
+Tools
+=====
+
+Bash prompt for git users
+-------------------------
+
+Shows information about the state of the current git archive
+ * Git prompt with lots of information
+  * https://github.com/magicmonty/bash-git-prompt
+ * Simpler git prompt
+  * https://github.com/jimeh/git-aware-prompt
+
+
+Editor/IDE plugins
+------------------
+
+Emacs comes with VersionControl:
+C-x v d   (directory status)
+C-x v i   (register file i.e. add)
+C-x v v   (check in i.e. add and commit) C-c C-c commits
+
+Eclipse
+
+Graphical tools
+---------------
+
+gitk (commit and repo viewer)
+git-gui (create commits and use blame)
+ git gui blame soco/core.py
+ git gui browser master
+ git gui citool   or   git citool
+git-cola
+gitkraken
